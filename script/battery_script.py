@@ -5,9 +5,9 @@ from threading import Thread
 alert_shown = False
 charging_checker_started = False
 
-status_rate = 8
-charge_rate = 4
-battery_level = 28
+status_rate = 60
+charge_rate = 20
+battery_level = 20
 
 class BatteryPowerChecker(Thread):
 	def __init__(self, interval_rate):
