@@ -5,9 +5,9 @@ from threading import Thread
 alert_shown = False
 charging_checker_started = False
 
-status_rate = 60
-charge_rate = 20
-battery_level = 20
+status_rate = 8
+charge_rate = 4
+battery_level = 28
 
 class BatteryPowerChecker(Thread):
 	def __init__(self, interval_rate):
@@ -18,7 +18,7 @@ class BatteryPowerChecker(Thread):
 
 	def run(self):
 		global alert_shown
-		first_round_passed = False
+		#first_round_passed = False
 		#print "Battery power checker started"
 
 		while True:
@@ -30,14 +30,16 @@ class BatteryPowerChecker(Thread):
 			status = status.group(0)[:-1] if status is not None else ""		#We discard the event in which status is "AC attached"
 			#Possible statuses are "charging", "charged", "discharging" and "AC attached"
 			#print "Battery status : %s\n" % status
-			if status == "discharging" and not alert_shown:
+			#print "Alert_shown : %s" % alert_shown
+			#print "Chargin_checker_started: %s" % charging_checker_started
+			if status == "discharging" and not alert_shown and not charging_checker_started:
 				self.change_charging_status_checker(start = True)
 			elif status != "discharging" and charging_checker_started:
 				self.change_charging_status_checker(start = False)
 			elif status == "charging" and alert_shown:
 				alert_shown = False
 			time.sleep(self._interval_rate)
-			first_round_passed = True
+			#first_round_passed = True
 
 	def change_charging_status_checker(self, start):
 		global charging_checker_started
@@ -63,7 +65,7 @@ class BatteryChargeChecker(Thread):
 	def run(self):
 		global alert_shown
 		#print "Battery charge checker started"
-		first_round_passed = False
+		#first_round_passed = False
 		while not self._should_stop:
 			#if first_round_passed:
 				#print "Other round of battery charge checker" 
@@ -77,14 +79,15 @@ class BatteryChargeChecker(Thread):
 				self.stop()
 			if not self._should_stop:		#It stoppes instantly if the other thread puts the boolean to false
 				time.sleep(charge_rate)
-			first_round_passed = True
+			#first_round_passed = True
 		else:
-			#print "Battery charge checker stopped\n"
+			print "Battery charge checker stopped\n"
 			global charging_checker_started
 			charging_checker_started = False
+			self = None
 
 	def stop(self):
-		#print "Battery charge checker stopping"
+		print "Battery charge checker stopping"
 		self._should_stop = True
 
 def show_alert():
