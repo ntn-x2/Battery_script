@@ -95,7 +95,7 @@ def show_alert():
 	popup_title = "BATTERY LEVEL LOW!"
 	popup_message = "PLUG CHARGE AS SOON AS YOU ARE WONDERFUL"
 	alert_command = "osascript -e 'tell app \"System Events\" to display dialog \"%s\" buttons {\"OK\"} with title \"%s\" with icon caution'" % (popup_message, popup_title)
-	sound_command = "say -v Whisper battery out!"
+	sound_command = "say -v Whisper battery low!"
 	#TODO: ADD SOUND TO THE DIALOG
 	subprocess.Popen(alert_command, shell = True)
 	subprocess.Popen(sound_command, shell = True)
